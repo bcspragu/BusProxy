@@ -143,8 +143,6 @@ func responseFromDeparture(stopDep avail.StopDeparture, c appengine.Context) Sto
 		for _, dep := range dir.Departures {
 			// If we haven't seen this one before
 			if _, ok := uniqueISDs[dep.Trip.InternetServiceDesc]; !ok {
-				c.Infof("%s: %+v", route.ShortName, dep.EDT)
-				c.Infof("%+v", time.Now())
 				if dep.EDT.After(time.Now()) {
 					uniqueISDs[dep.Trip.InternetServiceDesc] = true
 					routeInfo := RouteInfo{
