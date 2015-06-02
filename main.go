@@ -108,7 +108,7 @@ func serveInfo(w http.ResponseWriter, r *http.Request) {
 
 	res := make([]StopResponse, len(stops))
 	for i, dep := range departures {
-		res[i] = responseFromDeparture(dep, c)
+		res[i] = responseFromDeparture(dep)
 	}
 
 	data, err := json.Marshal(res)
@@ -134,7 +134,7 @@ func stopList(stops []string) ([]int, error) {
 	return res, nil
 }
 
-func responseFromDeparture(stopDep avail.StopDeparture, c appengine.Context) StopResponse {
+func responseFromDeparture(stopDep avail.StopDeparture) StopResponse {
 	res := StopResponse{
 		StopName: stops[stopDep.StopId].Name,
 		Routes:   []RouteInfo{},
