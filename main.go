@@ -36,9 +36,11 @@ func init() {
 	avail.SetLocation("America/New_York")
 
 	http.HandleFunc("/", serveInfo)
+	http.HandleFunc("/_ah/warmup", serveLoad)
 }
 
-func reload(c appengine.Context) {
+func serveLoad(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
 	feed.SetClient(urlfetch.Client(c))
 
 	visRoutes, err := feed.VisibleRoutes()
@@ -62,9 +64,6 @@ func reload(c appengine.Context) {
 
 func serveInfo(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	if len(routes) == 0 {
-		reload(c)
-	}
 
 	feed.SetClient(urlfetch.Client(c))
 
@@ -72,6 +71,10 @@ func serveInfo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	r.ParseForm()
+	if len(r.Form["stop"]) == 0 {
+		w.Write([]byte("[]"))
+		return
+	}
 	stops, err := stopList(r.Form["stop"])
 
 	if err != nil {
