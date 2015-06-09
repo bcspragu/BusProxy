@@ -5,6 +5,7 @@ import (
 
 	"encoding/json"
 	"errors"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -31,11 +32,14 @@ var feed *avail.Feed
 var routes = make(map[int]avail.Route)
 var stops = make(map[int]avail.Stop)
 
+var t = template.Must(template.New("").Delims(`\\\`, `///`).ParseFiles("index.html"))
+
 func init() {
 	feed = avail.NewFeed("http://bustracker.pvta.com")
 	avail.SetLocation("America/New_York")
 
 	http.HandleFunc("/", serveInfo)
+	http.HandleFunc("/board", serveBoard)
 	http.HandleFunc("/_ah/warmup", serveLoad)
 }
 
@@ -119,6 +123,15 @@ func serveInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(data)
+}
+
+func serveBoard(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+
+	err := t.ExecuteTemplate(w, "index.html", nil)
+	if err != nil {
+		serveError(w, c, err)
+	}
 }
 
 func stopList(stops []string) ([]int, error) {

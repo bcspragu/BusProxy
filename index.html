@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang='en-US'>
+<head>
+  <title>Bus Info Board</title>
+  <link rel="stylesheet" href="css/animate.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/main.css">
+  <meta charset='utf-8'>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <div class="container-fluid main-content">
+  </div>
+  <script id='board' type='text/ractive'>
+    {{#each stops}}
+      {{#if routes.length > 0}}
+        <h1>{{stopName}}</h1>
+        {{#each routes}}
+          <div class="route" style="background-color: #{{color}}">
+            <div class="row">
+              <div class="route_short_name text-center-xs {{sProp}}" style="color: #{{textColor}}">
+                {{number}}
+              </div>
+              <div class="route_long_name text-center-xs {{lProp}}" style="color: #{{textColor}}">
+                {{name}}
+              </div>
+              <div class="route_arrival text-center-xs {{aProp}}" style="color: #{{textColor}}">
+                {{moment(departureTime).from(moment(), true)}}
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      {{/if}}
+    {{/each}}
+  </script>
+  <script src="js/jquery-1.11.0.min.js"></script>
+  <script src="js/moment.min.js"></script>
+  <script src='http://cdn.ractivejs.org/latest/ractive.min.js'></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
