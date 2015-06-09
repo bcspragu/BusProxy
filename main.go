@@ -67,6 +67,7 @@ func serveInfo(w http.ResponseWriter, r *http.Request) {
 
 	feed.SetClient(urlfetch.Client(c))
 
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	// We're sending a JSON response
 	w.Header().Set("Content-Type", "application/json")
 
